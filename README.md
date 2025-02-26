@@ -1,5 +1,25 @@
 # rawaudiovae
 
+# Kelsey Notes
+
+## Additions
+- Interpolations
+  - interpolations python script (not yet tested in Alvis)
+  - interpolations Jupyter Notebook for DIY mode
+- Train
+  - logging integrated in train.py script
+- Reconstruct script
+  - Does not make use of model, is very hacky. 
+- Zombie folder
+  - Don't open it. Contains redundant files. Not to be used. 
+
+## Notes
+  - paths for config files are hardset to my paths in Alvis
+  - 30hour training run for baseline model on FSD50K running in Alvis
+
+
+# OG Text
+
 Tested with torch 2.0.1.
 
 Check out tutorial.ipynb for testing a trained model. You can download a dataset with trained models here: 

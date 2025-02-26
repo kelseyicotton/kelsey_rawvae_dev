@@ -1,5 +1,3 @@
-# rawaudiovae
-
 # Kelsey Notes
 
 ## Additions
@@ -19,6 +17,8 @@
 
 
 # OG Text
+
+## rawaudiovae
 
 Tested with torch 2.0.1.
 

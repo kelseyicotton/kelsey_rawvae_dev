@@ -15,7 +15,6 @@
   - paths for config files are hardset to my paths in Alvis
   - 30hour training run for baseline model on FSD50K running in Alvis
 
-
 # OG Text
 
 ## rawaudiovae

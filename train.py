@@ -195,6 +195,10 @@ for epoch in range(epochs):
         writer.add_scalar('Loss/Batch', loss.item(), epoch * len(training_dataloader) + i)
 
         loss.backward()
+
+        # Gradient clipping because loss was exploding
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
         train_loss += loss.item()
 
         optimizer.step()

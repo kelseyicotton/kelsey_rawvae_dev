@@ -196,8 +196,8 @@ for epoch in range(epochs):
 
         loss.backward()
 
-        # Gradient clipping because loss was exploding
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        # Gradient clipping because loss was exploding # NEW
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0) # NEW
 
         train_loss += loss.item()
 

@@ -9,7 +9,7 @@ from torchvision import datasets, transforms
 
 from rawvae.model import VAE, loss_function
 from rawvae.tests import init_test_audio
-from rawvae.dataset import AudioIterableDataset, ToTensor
+from rawvae.datasetcycle import AudioIterableDataset, ToTensor
 
 import random
 import numpy as np
@@ -130,7 +130,7 @@ logging.info(f'Found {len(file_paths)} audio files.')
 training_dataset = AudioIterableDataset(file_paths, segment_length=segment_length, sampling_rate=sampling_rate, hop_size=hop_length, transform=ToTensor())
 
 # Create the DataLoader
-training_dataloader = DataLoader(training_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
+training_dataloader = DataLoader(training_dataset, batch_size=batch_size, shuffle=False, num_workers=0) # num_workers= 4 previously
 
 logging.info('Starting training with AudioIterableDataset...')
 logging.info(f'Total segments available: {len(training_dataset)}')

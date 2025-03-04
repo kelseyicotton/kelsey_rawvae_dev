@@ -6,13 +6,17 @@ import librosa
 from torch.utils.data import Dataset, IterableDataset
 from pathlib import Path
 import numpy as np
+import logging
+
+## remove all parallel workers stuff
+## shuffle dataset file list
 
 class AudioIterableDataset(torch.utils.data.IterableDataset):
     """
     Stream audio files in chunks for memory-efficient training.
     """
 
-    def __init__(self, file_paths, segment_length, sampling_rate, hop_size, transform=None):
+    def __init__(self, file_paths, segment_length, sampling_rate, hop_size, transform=None, shuffle=False):
         super().__init__()
 
         self.transform = transform
@@ -20,6 +24,7 @@ class AudioIterableDataset(torch.utils.data.IterableDataset):
         self.segment_length = segment_length
         self.hop_size = hop_size
         self.file_paths = file_paths  # List of file paths
+        self.shuffle = shuffle # 🆕
 
         if segment_length % hop_size != 0:
             raise ValueError("segment_length {} is not a multiple of hop_size {}".format(segment_length, hop_size))
@@ -30,21 +35,24 @@ class AudioIterableDataset(torch.utils.data.IterableDataset):
             audio, _ = librosa.load(file_path, sr=self.sampling_rate)
             self.total_segments += (len(audio) // self.hop_size) - (self.segment_length // self.hop_size) + 1
 
+        if self.shuffle:
+            random.shuffle(self.file_paths)
+
     def __iter__(self):
-        worker_info = torch.utils.data.get_worker_info()
+        # worker_info = torch.utils.data.get_worker_info()
 
-        if worker_info is None:  # Single-process loading
-            file_indices = range(len(self.file_paths))
-        else:  # Multi-process loading
-            per_worker = int(np.ceil(len(self.file_paths) / float(worker_info.num_workers)))
-            worker_id = worker_info.id
-            start_idx = worker_id * per_worker
-            end_idx = min(start_idx + per_worker, len(self.file_paths))
-            file_indices = range(start_idx, end_idx)
+        # if worker_info is None:  # Single-process loading
+        #     file_indices = range(len(self.file_paths))
+        # else:  # Multi-process loading
+        #     per_worker = int(np.ceil(len(self.file_paths) / float(worker_info.num_workers)))
+        #     worker_id = worker_info.id
+        #     start_idx = worker_id * per_worker
+        #     end_idx = min(start_idx + per_worker, len(self.file_paths))
+        #     file_indices = range(start_idx, end_idx)
 
-        # Iterate over files assigned to this worker
-        for file_idx in file_indices:
-            file_path = self.file_paths[file_idx]
+        # Iterate over all files 
+        for file_idx in self.file_paths:
+            # file_path = self.file_paths[file_idx]
             audio, _ = librosa.load(file_path, sr=self.sampling_rate)
 
             # Pad audio if necessary
